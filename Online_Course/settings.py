@@ -27,11 +27,14 @@ SECRET_KEY = "django-insecure-f@dpu9^x#$#&$)gtyk4_^9tpqdwde!y(ne&6i^^ggruhixj6hc
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-j
+
+
+AUTH_USER_MODEL = "user.User"
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -89,6 +92,18 @@ NINJA_JWT = {
     "ACCESS_TOKEN_LIFETIME": 10080,  
     "REFRESH_TOKEN_LIFETIME": 43200,
     "SIGNING_KEY": SECRET_KEY,
+}
+
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Online Course",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Online Course",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Online Course",
 }
 
 

@@ -1,5 +1,6 @@
 from django.db import models
 from utils.models import TimeStampedModel
+from django_extensions.db.fields import AutoSlugField
 
 class Course(TimeStampedModel):
     user = models.ForeignKey('user.User', related_name='courses', on_delete=models.CASCADE)
@@ -7,6 +8,7 @@ class Course(TimeStampedModel):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='courses/images/', blank=True, null=True)
+    slug = AutoSlugField(populate_from='title', unique=True)
 
     def __str__(self):
         try:

@@ -19,9 +19,11 @@ from django.contrib import admin
 from django.urls import path
 from user.api import user_api
 from course.routers.course import course_api
+from course.routers.lesson import lesson_api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", user_api.urls),  # Include user API URLs
     path("api/", course_api.urls),  # Include course API URLs
+    path("api/", lesson_api.urls)
 ]

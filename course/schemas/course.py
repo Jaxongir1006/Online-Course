@@ -9,7 +9,8 @@ class ErrorSchema(Schema):
 class CourseSchema(ModelSchema):
     class Meta:
         model = Course
-        fields = ['id', 'user', 'title', 'description', 'price', 'image']
+        fields = ['id', 'user', 'title', 'description', 'price', 'image', 'slug']
+        read_only_fields = ['id']
 
 
 class CreateCourseSchema(Schema):

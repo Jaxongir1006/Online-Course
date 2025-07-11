@@ -53,6 +53,7 @@ def login(request, data: LoginUserSchema):
         return 400, {"message": "Invalid password"}
 
     token = RefreshToken.for_user(user)
+    print(str(token.access_token))
     response_data = {
         "user": UserSchema.from_orm(user),
         "access_token": str(token.access_token),
