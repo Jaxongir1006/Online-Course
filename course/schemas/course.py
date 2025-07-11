@@ -1,5 +1,6 @@
 from ninja import Schema, ModelSchema
 from course.models import Course
+from typing import Optional
 
 
 class ErrorSchema(Schema):
@@ -18,3 +19,10 @@ class CreateCourseSchema(Schema):
     description: str
     price: float
     image: str = None
+
+
+class UpdateCourseSchema(Schema):
+    title: str = Optional[str]
+    description: str = Optional[str]
+    price: float = Optional[float]
+    image: str = Optional[str]

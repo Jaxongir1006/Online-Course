@@ -26,7 +26,7 @@ class Lesson(TimeStampedModel):
     title = models.CharField(max_length=200)
     duration_minutes = models.PositiveIntegerField()
     video_url = models.URLField(blank=True, null=True)
-
+    
     def __str__(self):
         return f"{self.title} - {self.course.title}"
     
