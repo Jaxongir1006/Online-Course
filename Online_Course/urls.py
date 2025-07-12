@@ -20,10 +20,13 @@ from django.urls import path
 from user.api import user_api
 from course.routers.course import course_api
 from course.routers.lesson import lesson_api
+from enrollment.router.enrollment import enrollment_api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", user_api.urls),  # Include user API URLs
-    path("api/", course_api.urls),  # Include course API URLs
-    path("api/", lesson_api.urls)
+    path("api/", user_api.urls),
+    path("api/", course_api.urls),
+    path("api/", lesson_api.urls),
+    path("api/", enrollment_api.urls),
+
 ]

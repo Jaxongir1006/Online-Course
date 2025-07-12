@@ -26,3 +26,10 @@ class UpdateCourseSchema(Schema):
     description: str = Optional[str]
     price: float = Optional[float]
     image: str = Optional[str]
+
+
+class RestoreCourseSchema(Schema):
+    title: str
+    description: str
+    price: float
+    image: str

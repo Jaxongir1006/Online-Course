@@ -1,5 +1,5 @@
 from ninja_extra import NinjaExtraAPI
-from ..schemas.course import CourseSchema, ErrorSchema, CreateCourseSchema, UpdateCourseSchema
+from ..schemas.course import CourseSchema, ErrorSchema, CreateCourseSchema, UpdateCourseSchema,RestoreCourseSchema
 from course.models import Course
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_jwt.authentication import JWTAuth
@@ -76,4 +76,24 @@ def partial_update_course(request, course_id: int, data: UpdateCourseSchema):
     for field, value in data.items():
         setattr(course, field, value)
     course.save()
+    return 200, course
+
+
+@course_api.post("courses/restore/", response={200: CourseSchema, 401: ErrorSchema, 404: ErrorSchema, 403: ErrorSchema})
+def restore_course(request, data: RestoreCourseSchema):
+    user = request.user
+    if not user.is_authenticated:
+        return 401, {"message": "Authentication required"}
+    if user.user_type not in ['teacher', 'admin']:
+        return 403, {"message": "Permission denied"}
+    data = data.model_dump()
+    data.pop('image')
+    data.pop('description')
+    try:
+        course = Course.objects.get(**data, is_deleted=True, user=user)
+    except Course.DoesNotExist:
+        return 404, {"message": "Course not found"}
+    except Exception as e:
+        return 404, {"message": "Sorry but we couldn't find your course\nGive us specific data\nTry again"}
+    course.restore()
     return 200, course

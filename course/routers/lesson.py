@@ -1,4 +1,4 @@
-from ..schemas.lesson import LessonSchema, CreateLessonSchema,ErrorSchema, UpdateLessonSchema
+from ..schemas.lesson import LessonSchema, CreateLessonSchema,ErrorSchema, UpdateLessonSchema, RestoreLessonSchema
 from course.models import Lesson
 from ninja_extra import NinjaExtraAPI
 from course.models import Course
@@ -16,7 +16,7 @@ def get_lesson(request, course_slug: str):
         return 401, {"message": "Authentication required"}
     try:
         course = Course.objects.get(slug=course_slug)
-        lessons = Lesson.objects.filter(course=course)
+        lessons = Lesson.objects.filter(course=course, is_deleted=False)
     except Course.DoesNotExist:
         return 404, {"message": "Course not found"}
 
@@ -103,5 +103,33 @@ def partial_update_lesson(request, lesson_id: int, data: UpdateLessonSchema):
     for field, value in data.items():
         setattr(lesson, field, value)
     lesson.save()
+
+    return 200, lesson
+
+
+@lesson_api.post("lessons/restore/", response={200: LessonSchema, 401: ErrorSchema, 404: ErrorSchema, 403: ErrorSchema})
+def restore_lesson(request, data: RestoreLessonSchema):
+    user = request.user
+    if not user.is_authenticated:
+        return 401, {"message": "Authentication required"}
+    if user.user_type not in ['teacher', 'admin']:
+        return 403, {"message": "Permission denied"}
+    
+    data = data.model_dump()
+    course = data.pop('course')
+
+    try:
+        course_id = Course.objects.get(slug=course, user=user)
+    except Course.DoesNotExist:
+        return 404, {"message": "Course not found"}
+
+    data['course'] = course_id
+
+    try:
+        lesson = Lesson.objects.get(**data, is_deleted=True)
+    except Lesson.DoesNotExist:
+        return 404, {"message": "Sorry but we couldn't find your lesson\nGive us specific data\nTry again"}
+
+    lesson.restore()
 
     return 200, lesson

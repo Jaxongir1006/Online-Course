@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'user',
     'ninja_jwt',
+    'enrollment',
+    'progress'
 ]
 
 MIDDLEWARE = [
