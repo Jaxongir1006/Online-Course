@@ -21,6 +21,9 @@ from user.api import user_api
 from course.routers.course import course_api
 from course.routers.lesson import lesson_api
 from enrollment.router.enrollment import enrollment_api
+from progress.router.progress import progress_api
+from review.router.router import review_api
+from rating.router import rating_api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,5 +31,7 @@ urlpatterns = [
     path("api/", course_api.urls),
     path("api/", lesson_api.urls),
     path("api/", enrollment_api.urls),
-
+    path("api/", progress_api.urls),
+    path('api/', review_api.urls),
+    path('api/', rating_api.urls),
 ]

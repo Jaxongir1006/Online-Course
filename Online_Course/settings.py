@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'user',
     'ninja_jwt',
     'enrollment',
-    'progress'
+    'progress',
+    'review',
+    'rating',
 ]
 
 MIDDLEWARE = [
@@ -91,8 +93,8 @@ DATABASES = {
 }
 
 NINJA_JWT = {
-    "ACCESS_TOKEN_LIFETIME": 10080,  
-    "REFRESH_TOKEN_LIFETIME": 43200,
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "SIGNING_KEY": SECRET_KEY,
 }
 

@@ -21,13 +21,13 @@ class Course(TimeStampedModel):
     def restore(self):
         self.is_deleted = False
         self.deleted_at = None
-        self.save()
+        self.save() 
 
     def __str__(self):
         try:
             return f'{self.title} - {self.user.username}'
         except Exception as e:
-            return f'{self.title} - UnknownUser ({e})'
+            return f'{self.title}- UnknownUser ({e})'
         
     @property
     def image_url(self):

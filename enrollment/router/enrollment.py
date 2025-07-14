@@ -12,9 +12,10 @@ enrollment_api.register_controllers(NinjaJWTDefaultController)
 
 @enrollment_api.get("enrollments/{course_slug}/", response={200: list[EnrollmentSchema], 401: ErrorSchema})
 def get_enrollments_for_admins(request, course_slug: str):
-    if not request.user.is_authenticated:
+    user = request.user
+    if not user.is_authenticated:
         return 401, {"message": "Authentication required"}
-    if request.user.user_type != 'admin':
+    if user.user_type != 'admin':
         return 403, {"message": "Permission denied"}
     try:
         course = Course.objects.get(slug=course_slug)
@@ -43,10 +44,10 @@ def register_enrollment(request, data: RegisterEnrollmentSchema):
 def get_my_courses(request):
     if not request.user.is_authenticated:
         return 401, {"message": "Authentication required"}
-    try:
-        enrollments = Enrollment.objects.filter(user=request.user)
-    except Enrollment.DoesNotExist:
-        return 401, {"message": "We are sorry but you didn't enroll to any course yet\nIf you want to enroll to a course you can do it from the main page"}
+    
+    enrollments = Enrollment.objects.filter(user=request.user)
+    if not enrollments.exists():
+        return 404, {"message": "You are not enrolled in any course"}
     return 200, list(enrollments)
     
 
