@@ -24,6 +24,10 @@ from enrollment.router.enrollment import enrollment_api
 from progress.router.progress import progress_api
 from review.router.router import review_api
 from rating.router import rating_api
+from analytics.router import analytics_api
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,4 +38,10 @@ urlpatterns = [
     path("api/", progress_api.urls),
     path('api/', review_api.urls),
     path('api/', rating_api.urls),
+    path('api/', analytics_api.urls),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

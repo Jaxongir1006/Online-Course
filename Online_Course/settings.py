@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'progress',
     'review',
     'rating',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -86,11 +88,16 @@ WSGI_APPLICATION = "Online_Course.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': os.environ.get("SQL_ENGINE","django.db.backends.postgresql"),
+        'NAME': os.environ.get("SQL_DATABASE","course_db"),
+        'USER': os.environ.get("SQL_USER","course_user"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD","course_pass"),
+        'HOST': os.environ.get("SQL_HOST","db"),
+        'PORT': os.environ.get("SQL_PORT","5432"),
     }
 }
+
 
 NINJA_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  
@@ -146,6 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

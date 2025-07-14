@@ -11,9 +11,7 @@ class Rating(models.Model):
         unique_together = ('user', 'course')
 
 
-    def __str__(self):
-        return f'{self.user.username} - {self.course.title} - {self.stars}'
-    
+
     def calculate_rating(self) -> float:
         """
         Kurs boyicha ortacha reytingni hisoblaydi

@@ -3,6 +3,31 @@ from utils.models import TimeStampedModel
 from django_extensions.db.fields import AutoSlugField
 from django.utils.timezone import now
 
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    slug = AutoSlugField(populate_from='name', unique=True)
+    image = models.ImageField(upload_to='categories/images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+    @property
+    def imageURL(self):
+        return self.image.url if self.image else None
+
+class SubCategory(TimeStampedModel):
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    slug = AutoSlugField(populate_from='name', unique=True)
+    image = models.ImageField(upload_to='subcategories/images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+        
+    @property
+    def imageURL(self):
+        return self.image.url if self.image else None
+
 class Course(TimeStampedModel):
     user = models.ForeignKey('user.User', related_name='courses', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -12,6 +37,7 @@ class Course(TimeStampedModel):
     slug = AutoSlugField(populate_from='title', unique=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    category = models.ForeignKey(Category, related_name='courses', on_delete=models.CASCADE)
 
     def delete(self, using =None, keep_parents = False):
         self.is_deleted = True

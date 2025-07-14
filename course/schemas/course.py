@@ -1,5 +1,5 @@
 from ninja import Schema, ModelSchema
-from course.models import Course
+from course.models import Course, Category, SubCategory
 from typing import Optional
 
 
@@ -33,3 +33,15 @@ class RestoreCourseSchema(Schema):
     description: str
     price: float
     image: str
+
+
+class CategorySchema(ModelSchema):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'slug', 'image']
+
+
+class SubCategorySchema(ModelSchema):
+    class Meta:
+        model = SubCategory
+        fields = ['id', 'name', 'slug', 'image']
