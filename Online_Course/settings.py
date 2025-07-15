@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'review',
     'rating',
     'analytics',
+    'certificate',
+    'exams',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +105,8 @@ NINJA_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "SIGNING_KEY": SECRET_KEY,
+    "USER_ID_FIELD": "id",  # ← bu borligiga ishonch hosil qiling
+    "USER_ID_CLAIM": "user_id",  # token ichidagi kalit ham mos bo‘lishi kerak
 }
 
 

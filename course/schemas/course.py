@@ -8,10 +8,10 @@ class ErrorSchema(Schema):
 
 
 class CourseSchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Course
-        fields = ['id', 'user', 'title', 'description', 'price', 'image', 'slug']
-        read_only_fields = ['id']
+        model_fields = ['id', 'user', 'title', 'description', 'price', 'image', 'slug']
+        from_attributes = True
 
 
 class CreateCourseSchema(Schema):
@@ -19,6 +19,7 @@ class CreateCourseSchema(Schema):
     description: str
     price: float
     image: str = None
+    subcategory_slug: str
 
 
 class UpdateCourseSchema(Schema):
@@ -36,12 +37,13 @@ class RestoreCourseSchema(Schema):
 
 
 class CategorySchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Category
-        fields = ['id', 'name', 'slug', 'image']
-
+        model_fields = ['id', 'name', 'slug', 'image']
+        from_attributes = True
 
 class SubCategorySchema(ModelSchema):
-    class Meta:
+    class Config:
         model = SubCategory
-        fields = ['id', 'name', 'slug', 'image']
+        model_fields = ['id', 'name', 'slug', 'image']
+        from_attributes = True

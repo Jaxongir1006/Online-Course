@@ -7,10 +7,10 @@ class ErrorSchema(Schema):
     message: str
 
 class CommentSchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Comment
-        fields = ['id', 'user', 'course', 'text', 'parent', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at','user', 'course']
+        model_fields = ['id', 'user', 'course', 'text', 'parent', 'created_at', 'updated_at']
+        from_attributes = True
 
 class CreateCommentSchema(Schema):
     text: str

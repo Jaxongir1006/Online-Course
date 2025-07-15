@@ -6,9 +6,10 @@ class ErrorSchema(Schema):
 
 
 class EnrollmentSchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Enrollment
-        fields = '__all__'
+        model_fields = '__all__'
+        from_attributes = True
 
 class RegisterEnrollmentSchema(Schema):
     course: str

@@ -17,7 +17,9 @@ class LoginUserSchema(Schema):
     email: str = None
 
 class UserSchema(ModelSchema): 
-    class Meta:
+    class Config:
         model = User
-        fields = ['id', 'username', 'email', 'date_joined', 'first_name', 'last_name', 'user_type',]
+        model_fields = ['id', 'username', 'email', 'date_joined', 'first_name', 'last_name', 'user_type',]
+        from_attributes = True
+
 

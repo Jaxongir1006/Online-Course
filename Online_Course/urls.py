@@ -25,6 +25,8 @@ from progress.router.progress import progress_api
 from review.router.router import review_api
 from rating.router import rating_api
 from analytics.router import analytics_api
+from certificate.router import certificate_api
+from exams.router import exams_api
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -39,6 +41,8 @@ urlpatterns = [
     path('api/', review_api.urls),
     path('api/', rating_api.urls),
     path('api/', analytics_api.urls),
+    path('api/', certificate_api.urls),
+    path('api/', exams_api.urls),
 ]
 
 

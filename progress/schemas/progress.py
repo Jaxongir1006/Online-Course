@@ -7,6 +7,7 @@ class ErrorSchema(Schema):
 
 
 class ProgressSchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Progress
-        fields = ['user','lesson','watched_at','watched']
+        model_fields = ['user','lesson','watched_at','watched']
+        from_attributes = True

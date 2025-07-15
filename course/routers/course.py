@@ -19,17 +19,19 @@ course_api = NinjaExtraAPI(urls_namespace="course", auth=JWTAuth())
 course_api.register_controllers(NinjaJWTDefaultController)
 
 
-@course_api.get("courses/{subcategory_slug}", response={200: list[CourseSchema], 401: ErrorSchema})
+@course_api.get("courses/{subcategory_slug}/", response={200: list[CourseSchema], 401: ErrorSchema})
 def list_courses(request, subcategory_slug: str):
     if not request.user.is_authenticated:
         return 401, {"message": "Authentication required"}
     try:
         subcategory = SubCategory.objects.get(slug=subcategory_slug)
+        if not subcategory_slug:
+            return 400, {"message": "Subcategory slug is required"}
         courses = list(Course.objects.filter(subcategory=subcategory))
     except SubCategory.DoesNotExist:
         return 404, {"message": "SubCategory not found"}
     return 200, courses
-
+ 
 
 @course_api.post(
     "courses/",
@@ -42,9 +44,16 @@ def create_course(request, data: CreateCourseSchema):
         return 401, {"message": "Authentication required"}
     if user.user_type not in ["teacher", "admin"]:
         return 403, {"message": "Permission denied"}
+    
+    try:
+        subcategory = SubCategory.objects.get(slug=data.subcategory_slug)
+    except SubCategory.DoesNotExist:
+        return 404, {"message": "SubCategory not found"}
 
     data = data.model_dump()
-    course = Course(**data, user=request.user)
+    data.pop("subcategory_slug")
+
+    course = Course(**data, user=request.user, subcategory=subcategory)
     course.save()
     return 201, course
 
@@ -148,7 +157,7 @@ def list_subcategories(request):
     subcategories = list(SubCategory.objects.all())
     return 200, subcategories
 
-@course_api.get("subcategories/{category_slug}", response={200: list[SubCategorySchema], 401: ErrorSchema})
+@course_api.get("subcategories/{category_slug}/", response={200: list[SubCategorySchema], 401: ErrorSchema})
 def list_subcategories_by_category(request, category_slug: str):
     if not request.user.is_authenticated:
         return 401, {"message": "Authentication required"}

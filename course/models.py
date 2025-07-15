@@ -37,7 +37,7 @@ class Course(TimeStampedModel):
     slug = AutoSlugField(populate_from='title', unique=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    category = models.ForeignKey(Category, related_name='courses', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, related_name='courses', on_delete=models.CASCADE)
 
     def delete(self, using =None, keep_parents = False):
         self.is_deleted = True

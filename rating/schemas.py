@@ -6,10 +6,10 @@ class ErrorSchema(Schema):
 
 
 class RatingSchema(ModelSchema):
-    class Meta:
+    class Config:
         model = Rating
-        fields = ['user', 'course', 'stars']
-        read_only_fields = ['user', 'course']
+        model_fields = ['user', 'course', 'stars']
+        from_attributes = True
 
 class CreateRatingSchema(Schema):
     stars: int
