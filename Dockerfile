@@ -9,8 +9,17 @@ COPY requirements.txt .
 COPY .env .env
 
 # 4. Kutubxonalarni o‘rnatamiz
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt update && apt install -y \
+    build-essential \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libcairo2 \
+    libgdk-pixbuf2.0-0 \
+    libffi-dev \
+    libglib2.0-0 \
+    && apt clean
 
+RUN pip install -r requirements.txt
 # 5. Butun loyihani konteynerga nusxalaymiz
 COPY . .
 

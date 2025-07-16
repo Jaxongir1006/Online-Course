@@ -5,6 +5,7 @@ from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import NinjaJWTDefaultController
 from user.models import User
 from course.models import Course
+from utils.certificate import generate_certificate
 
 certificate_api = NinjaExtraAPI(urls_namespace="certificate", auth=JWTAuth())
 
@@ -36,6 +37,6 @@ def giving_certificate(request, data: CreateCertificateSchema):
     except User.DoesNotExist:
         return 404, {"message": "User not found"}
 
-    certificate = Certificate.objects.create(user=user, course=course, **data)
+    certificate = generate_certificate(user, course, data.pop("score"))
 
     return 201, certificate

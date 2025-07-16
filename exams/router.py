@@ -6,6 +6,7 @@ from course.models import Course
 from .models import ExamQuestion,QuestionOption,Exam,ExamResult
 from django.db import transaction
 from certificate.models import Certificate
+from utils.certificate import generate_certificate
 
 
 exams_api = NinjaExtraAPI(urls_namespace="exams", auth=JWTAuth())
@@ -127,7 +128,6 @@ def submit_exam(request, exam_id: int, data: SubmitExamSchema):
 
         if question.correct_option == answer["selected_option"]:
             correct += 1
-        print(question.correct_option)
     score = (correct / total) * 100 if total > 0 else 0
     score = round(score, 2)
 
@@ -140,7 +140,14 @@ def submit_exam(request, exam_id: int, data: SubmitExamSchema):
     )
 
     if score > 70:
-        Certificate.objects.create(user=user, course=exam.course, certificate_file="certificate.pdf")
+        ExamResult.objects.create(
+            user=user,
+            exam=exam,
+            score=score,
+            total_questions=total,
+            correct_answers=correct
+        )
+        generate_certificate(user, exam.course, score)
         return 200, {
             "score": score,
             "correct": correct,
@@ -150,5 +157,6 @@ def submit_exam(request, exam_id: int, data: SubmitExamSchema):
     return 200, {
         "score": score,
         "correct": correct,
-        "total": total
+        "total": total,
+        "message": "You failed the exam. Better luck next time!"
     }
